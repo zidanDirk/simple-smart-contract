@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.8.2/dist/web3.min.js"></script>
+</head>
+<body>
+    <input type="text" id="myName">
+    <input type="number" id="myAge">
+    <button id="add">add</button>
+    <ul id="list">
+    </ul>
+    <script type="module">
+        const abi = [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "StudentList",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "age",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_name",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_age",
+          "type": "uint256"
+        }
+      ],
+      "name": "addList",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getList",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "age",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "internalType": "struct StudentListStorage.Student[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    }
+  ]
+        const address = "0x3dba5599f9229834ABcE21796bD8aAfF311BEd58"
+        const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+        let account = await web3.eth.requestAccounts()
+        
+        const StudentListStorage = await new web3.eth.Contract(
+            abi ,address)
+        add.onclick= async function () {
+            const length = await StudentListStorage.methods.addList(myName.value, myAge.value).send({
+                from: account[0]
+            })
+            console.log(22, length)
+            getList()
+        }
+
+        getList()
+
+        async function getList() {
+            const res = await StudentListStorage.methods.getList().call()
+            // const res = []
+            list.innerHTML = res.map(item => `
+                <li>${item.id}---${item.name}---${item.age}</li>
+            `).join("")
+            console.log(res)
+        }
+        
+    </script>
+</body>
+</html>
