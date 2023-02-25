@@ -68,7 +68,7 @@ contract DanToken {
         // _from 某个放款账号
         // _to 某个收款账号
         // msg.sender 交易所地址
-        require(balanceOf(_from) >= _value);
+        require(balanceOf[_from] >= _value);
         require(allowance[_from][msg.sender] >= _value);
         allowance[_from][msg.sender] = allowance[_from][msg.sender].sub(_value);
         _transfer(_from, _to, _value);
